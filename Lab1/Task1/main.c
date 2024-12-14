@@ -1,9 +1,9 @@
 /*
- * Project1.c
- *
- * Created: 12/11/2024 1:47:02 PM
+ * Lab1_Task1
+ * Created: 12/11/2024
  * Author : Mariam
  */ 
+ 
 #define F_CPU 8000000UL 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -11,9 +11,8 @@
 
 int main(void)
 {
-    /* Replace with your application code */
-	SET_BIT(DDRA,PORTA0);
-	CLR_BIT(PORTA,PORTA0);
+	SET_BIT(DDRA,PORTA0);       // Set PORTA pin0 as output for LED
+	CLR_BIT(PORTA,PORTA0);      // Set PORTA pin0 as LOW
     while (1) 
     {
 		_delay_ms(1000);
