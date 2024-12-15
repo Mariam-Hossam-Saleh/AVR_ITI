@@ -2,4 +2,6 @@
 *.out
 *.bin
 *.exe
+*.workspace
+*.pdsbak
 build
