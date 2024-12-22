@@ -7,7 +7,7 @@
 #define F_CPU 8000000UL
 #include <avr/io.h>
 #include <util/delay.h>
-#include "../../../../COTS_ITI/STD_LIB/BIT_MATH.h"
+#include "../../../../COTS/STD_LIB/BIT_MATH.h"
 
 
 int main(void)
