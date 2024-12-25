@@ -8,9 +8,9 @@
 #ifndef MDIO_CFG_H_
 #define MDIO_CFG_H_
 
-#define MDIO_NUM_OF_PORTS 1
+#include "MDIO.h"
+
+#define MDIO_NUM_OF_PORTS 4
 #define MDIO_NUM_OF_PINS  8
-
-
 
 #endif /* MDIO_CFG_H_ */

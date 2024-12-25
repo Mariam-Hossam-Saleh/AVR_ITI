@@ -4,26 +4,26 @@
  * Author : Mariam Hossam
  */ 
 
-#include "MDIO.h"
-#include "BIT_MATH.h"
+#include "../Inc/MDIO.h"
+#include "../../../LIB/BIT_MATH.h"
 
-#define PORTA (*((volatile u8*) 0x3B))
-#define PORTB (*((volatile u8*) 0x38))
-#define PORTC (*((volatile u8*) 0x35))
-#define PORTD (*((volatile u8*) 0x32))
 
-#define PINA (*((volatile u8*) 0x39))
-#define PINB (*((volatile u8*) 0x36))
-#define PINC (*((volatile u8*) 0x33))
-#define PIND (*((volatile u8*) 0x30))
+MDIO_enuPinCfg_t MDIO_enuPinCfgArray[MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS];
 
-#define DDRA (*((volatile u8*) 0x3A))
-#define DDRB (*((volatile u8*) 0x37))
-#define DDRC (*((volatile u8*) 0x34))
-#define DDRD (*((volatile u8*) 0x31))
+typedef struct  
+{
+	u8 PIN;
+	u8 DDR;
+	u8 PORT;
+}MDIO_strPortReg_t;
+
+#define MDIO_PORT_REG_BASE_ADD ((volatile MDIO_strPortReg_t*)(0x39))
+
+#define MDIO_GET_PORT_ADD(PORT_NUM) (MDIO_strPortReg_t *)(MDIO_PORT_REG_BASE_ADD) - (PORT_NUM)
 
 MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortNum,MDIO_enuPinNum_t Copy_enuPinNum,MDIO_enuPinCfg_t Copy_enuConfigration)
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
@@ -40,96 +40,25 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortN
 	else
 	{
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
+		if(Copy_enuConfigration == MDIO_OUTPUT_LOW)
 		{
-			case MDIO_PORTA:
-				if(Copy_enuConfigration == MDIO_OUTPUT_LOW)
-				{
-					SET_BIT(DDRA,Copy_enuPinNum);
-					CLR_BIT(PORTA,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_OUTPUT_HIGH)
-				{
-					SET_BIT(DDRA,Copy_enuPinNum);
-					SET_BIT(PORTA,Copy_enuPinNum);					
-				}
-				else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-				{
-					CLR_BIT(DDRA,Copy_enuPinNum);
-					SET_BIT(PORTA,Copy_enuPinNum);					
-				}
-				else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-				{
-					CLR_BIT(DDRA,Copy_enuPinNum);
-					CLR_BIT(PORTA,Copy_enuPinNum);
-				}				
-			break;
-			case MDIO_PORTB:
-				if(Copy_enuConfigration == MDIO_OUTPUT_LOW)
-				{
-					SET_BIT(DDRB,Copy_enuPinNum);
-					CLR_BIT(PORTB,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_OUTPUT_HIGH)
-				{
-					SET_BIT(DDRB,Copy_enuPinNum);
-					SET_BIT(PORTB,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-				{
-					CLR_BIT(DDRB,Copy_enuPinNum);
-					SET_BIT(PORTB,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-				{
-					CLR_BIT(DDRB,Copy_enuPinNum);
-					CLR_BIT(PORTB,Copy_enuPinNum);
-				}
-			break;
-			case MDIO_PORTC:
-				if(Copy_enuConfigration == MDIO_OUTPUT_LOW)
-				{
-					SET_BIT(DDRC,Copy_enuPinNum);
-					CLR_BIT(PORTC,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_OUTPUT_HIGH)
-				{
-					SET_BIT(DDRC,Copy_enuPinNum);
-					SET_BIT(PORTC,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-				{
-					CLR_BIT(DDRC,Copy_enuPinNum);
-					SET_BIT(PORTC,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-				{
-					CLR_BIT(DDRC,Copy_enuPinNum);
-					CLR_BIT(PORTC,Copy_enuPinNum);
-				}
-			break;
-			case MDIO_PORTD:
-				if(Copy_enuConfigration == MDIO_OUTPUT_LOW)
-				{
-					SET_BIT(DDRD,Copy_enuPinNum);
-					CLR_BIT(PORTD,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_OUTPUT_HIGH)
-				{
-					SET_BIT(DDRD,Copy_enuPinNum);
-					SET_BIT(PORTD,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-				{
-					CLR_BIT(DDRD,Copy_enuPinNum);
-					SET_BIT(PORTD,Copy_enuPinNum);
-				}
-				else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-				{
-					CLR_BIT(DDRD,Copy_enuPinNum);
-					CLR_BIT(PORTD,Copy_enuPinNum);
-				}
-			break;
+			SET_BIT(Loc_strPortAdd->DDR,Copy_enuPinNum);
+			CLR_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
+		}
+		else if(Copy_enuConfigration == MDIO_OUTPUT_HIGH)
+		{
+			SET_BIT(Loc_strPortAdd->DDR,Copy_enuPinNum);
+			SET_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
+		}
+		else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
+		{
+			CLR_BIT(Loc_strPortAdd->DDR,Copy_enuPinNum);
+			SET_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
+		}
+		else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
+		{
+			CLR_BIT(Loc_strPortAdd->DDR,Copy_enuPinNum);
+			CLR_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
 		}
 	}
 	return Ret_enuErrorStatus;	
@@ -137,6 +66,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinConfigration(MDIO_enuPortNum_t Copy_enuPortN
 
 MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPortNum,MDIO_enuPortCfg_t Copy_enuConfigration)
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
@@ -149,96 +79,25 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPort
 	else
 	{
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
+		if(Copy_enuConfigration == MDIO_OUTPUT_PORT_LOW)
 		{
-			case MDIO_PORTA:
-			if(Copy_enuConfigration == MDIO_OUTPUT_PORT_LOW)
-			{
-				DDRA = MDIO_PORT_HIGH;
-				PORTA = MDIO_PORT_LOW;
-			}
-			else if(Copy_enuConfigration == MDIO_OUTPUT_PORT_HIGH)
-			{
-				DDRA = MDIO_PORT_HIGH;
-				PORTA = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-			{
-				DDRA = MDIO_PORT_LOW;
-				PORTA = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-			{
-				DDRA = MDIO_PORT_LOW;
-				PORTA = MDIO_PORT_LOW;
-			}
-			break;
-			case MDIO_PORTB:
-			if(Copy_enuConfigration == MDIO_OUTPUT_PORT_LOW)
-			{
-				DDRB = MDIO_PORT_HIGH;
-				PORTB = MDIO_PORT_LOW;
-			}
-			else if(Copy_enuConfigration == MDIO_OUTPUT_PORT_HIGH)
-			{
-				DDRB = MDIO_PORT_HIGH;
-				PORTB = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-			{
-				DDRB = MDIO_PORT_LOW;
-				PORTB = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-			{
-				DDRB = MDIO_PORT_LOW;
-				PORTB = MDIO_PORT_LOW;
-			}
-			break;
-			case MDIO_PORTC:
-			if(Copy_enuConfigration == MDIO_OUTPUT_PORT_LOW)
-			{
-				DDRC = MDIO_PORT_HIGH;
-				PORTC = MDIO_PORT_LOW;
-			}
-			else if(Copy_enuConfigration == MDIO_OUTPUT_PORT_HIGH)
-			{
-				DDRC = MDIO_PORT_HIGH;
-				PORTC = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-			{
-				DDRC = MDIO_PORT_LOW;
-				PORTC = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-			{
-				DDRC = MDIO_PORT_LOW;
-				PORTC = MDIO_PORT_LOW;
-			}
-			break;
-			case MDIO_PORTD:
-			if(Copy_enuConfigration == MDIO_OUTPUT_PORT_LOW)
-			{
-				DDRD = MDIO_PORT_HIGH;
-				PORTD = MDIO_PORT_LOW;
-			}
-			else if(Copy_enuConfigration == MDIO_OUTPUT_PORT_HIGH)
-			{
-				DDRD = MDIO_PORT_HIGH;
-				PORTD = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_INTERNAL_PULLUP)
-			{
-				DDRD = MDIO_PORT_LOW;
-				PORTD = MDIO_PORT_HIGH;
-			}
-			else if(Copy_enuConfigration == MDIO_EXTERNAL_PULLDOWN)
-			{
-				DDRD = MDIO_PORT_LOW;
-				PORTD = MDIO_PORT_LOW;
-			}
-			break;
+			Loc_strPortAdd->DDR = MDIO_PORT_HIGH;
+			Loc_strPortAdd->PORT = MDIO_PORT_LOW;
+		}
+		else if(Copy_enuConfigration == MDIO_OUTPUT_PORT_HIGH)
+		{
+			Loc_strPortAdd->DDR = MDIO_PORT_HIGH;
+			Loc_strPortAdd->PORT = MDIO_PORT_HIGH;
+		}
+		else if(Copy_enuConfigration == MDIO_INTERNAL_PORT_PULLUP)
+		{
+			Loc_strPortAdd->DDR = MDIO_PORT_LOW;
+			Loc_strPortAdd->PORT = MDIO_PORT_HIGH;
+		}
+		else if(Copy_enuConfigration == MDIO_EXTERNAL_PORT_PULLDOWN)
+		{
+			Loc_strPortAdd->DDR = MDIO_PORT_LOW;
+			Loc_strPortAdd->PORT = MDIO_PORT_LOW;
 		}
 	}
 	return Ret_enuErrorStatus;		
@@ -246,6 +105,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortConfigration(MDIO_enuPortNum_t Copy_enuPort
 
 MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum,MDIO_enuPinNum_t Copy_enuPinNum,MDIO_enuPinState_t Copy_enuState)
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
@@ -262,48 +122,13 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum,MDIO
 	else
 	{
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
+		if(Copy_enuState == MDIO_PIN_LOW)
 		{
-			case MDIO_PORTA :
-				if(Copy_enuState == MDIO_PIN_LOW)
-				{
-					CLR_BIT(PORTA,Copy_enuPinNum);
-				}
-				else if(Copy_enuState == MDIO_PIN_HIGH)
-				{
-					SET_BIT(PORTA,Copy_enuPinNum);
-				}
-			break;
-			case MDIO_PORTB :
-				if(Copy_enuState == MDIO_PIN_LOW)
-				{
-					CLR_BIT(PORTB,Copy_enuPinNum);
-				}
-				else if(Copy_enuState == MDIO_PIN_HIGH)
-				{
-					SET_BIT(PORTB,Copy_enuPinNum);
-				}
-			break;
-			case MDIO_PORTC :
-				if(Copy_enuState == MDIO_PIN_LOW)
-				{
-					CLR_BIT(PORTC,Copy_enuPinNum);
-				}
-				else if(Copy_enuState == MDIO_PIN_HIGH)
-				{
-					SET_BIT(PORTC,Copy_enuPinNum);
-				}
-			break;
-			case MDIO_PORTD :
-				if(Copy_enuState == MDIO_PIN_LOW)
-				{
-					CLR_BIT(PORTD,Copy_enuPinNum);
-				}
-				else if(Copy_enuState == MDIO_PIN_HIGH)
-				{
-					SET_BIT(PORTD,Copy_enuPinNum);
-				}
-			break;
+			CLR_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
+		}
+		else if(Copy_enuState == MDIO_PIN_HIGH)
+		{
+			SET_BIT(Loc_strPortAdd->PORT,Copy_enuPinNum);
 		}
 	}
 	return Ret_enuErrorStatus;
@@ -311,6 +136,7 @@ MDIO_enuErrorStatus_t MDIO_enuSetPinValue(MDIO_enuPortNum_t Copy_enuPortNum,MDIO
 
 MDIO_enuErrorStatus_t MDIO_enuSetPortValue(MDIO_enuPortNum_t Copy_enuPortNum , u8 Copy_enuPortState)
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
@@ -323,60 +149,34 @@ MDIO_enuErrorStatus_t MDIO_enuSetPortValue(MDIO_enuPortNum_t Copy_enuPortNum , u
 	else
 	{
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
-		{
-			case MDIO_PORTA :
-				PORTA = (Copy_enuPortState & DDRA);
-			break;
-			case MDIO_PORTB :
-				PORTB = (Copy_enuPortState & DDRB);
-			break;
-			case MDIO_PORTC :
-				PORTC = (Copy_enuPortState & DDRC);
-			break;
-			case MDIO_PORTD :
-				PORTD = (Copy_enuPortState & DDRD);
-			break;
-		}
+		Loc_strPortAdd->PORT = (Copy_enuPortState & Loc_strPortAdd->DDR);
 	}		
 	return Ret_enuErrorStatus;
 }
 
 MDIO_enuErrorStatus_t MDIO_enuGetPortValue(MDIO_enuPortNum_t Copy_enuPortNum,u8* Add_pu8PinValue) 
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
 		Ret_enuErrorStatus = MDIO_INVALID_PORT_NUM;
 	}
-	else if(Add_pu8PinValue == NULL)
+	else if(Add_pu8PinValue == NULL_PTR)
 	{
 		Ret_enuErrorStatus = MDIO_NULL_POINTER;
 	}
 	else
-	{
+	{	
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
-		{
-			case MDIO_PORTA :
-				* Add_pu8PinValue = PINA;
-			break;
-			case MDIO_PORTB :
-				* Add_pu8PinValue = PINB;
-			break;
-			case MDIO_PORTC :
-				* Add_pu8PinValue = PINC;
-			break;
-			case MDIO_PORTD :
-				* Add_pu8PinValue = PIND;
-			break;
-		}
+		* Add_pu8PinValue = Loc_strPortAdd->PIN;
 	}
 	return Ret_enuErrorStatus;
 }
 
 MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum,MDIO_enuPinNum_t Copy_enuPinNum,u8* Add_pu8PinValue)
 {
+	MDIO_strPortReg_t * Loc_strPortAdd = MDIO_GET_PORT_ADD(Copy_enuPortNum);
 	MDIO_enuErrorStatus_t Ret_enuErrorStatus = MDIO_NOK;
 	if(Copy_enuPortNum > MDIO_PORTD)
 	{
@@ -386,30 +186,28 @@ MDIO_enuErrorStatus_t MDIO_enuGetPinValue(MDIO_enuPortNum_t Copy_enuPortNum,MDIO
 	{
 		Ret_enuErrorStatus = MDIO_INVALID_PIN_NUM;
 	}
-	else if(Add_pu8PinValue == NULL)
+	else if(Add_pu8PinValue == NULL_PTR)
 	{
 		Ret_enuErrorStatus = MDIO_NULL_POINTER;
 	}
 	else
 	{
 		Ret_enuErrorStatus = MDIO_OK;
-		switch(Copy_enuPortNum)
-		{
-			case MDIO_PORTA :
-				* Add_pu8PinValue = GET_BIT(PINA,Copy_enuPinNum);
-			break;
-			case MDIO_PORTB :
-				* Add_pu8PinValue = GET_BIT(PINB,Copy_enuPinNum);
-			break;
-			case MDIO_PORTC :
-				* Add_pu8PinValue = GET_BIT(PINC,Copy_enuPinNum);
-			break;
-			case MDIO_PORTD :
-				* Add_pu8PinValue = GET_BIT(PIND,Copy_enuPinNum);
-			break;
-		}
+		* Add_pu8PinValue = GET_BIT(Loc_strPortAdd->PIN,Copy_enuPinNum);
 	}
 	return Ret_enuErrorStatus;
 }
 
 
+void MDIO_vInit(void)
+{
+	MDIO_enuPortNum_t Loc_enuCurrentPort = MDIO_PORTA;           // int value ????
+	MDIO_enuPinNum_t Loc_enuCurrentPin = MDIO_PIN0;              // int value ????
+	for(u8 itration = 0 ; itration < (MDIO_NUM_OF_PORTS * MDIO_NUM_OF_PINS) ; itration++)
+	{
+		Loc_enuCurrentPort = itration / MDIO_NUM_OF_PINS;
+		Loc_enuCurrentPin = itration % MDIO_NUM_OF_PINS;
+		MDIO_enuSetPinConfigration(Loc_enuCurrentPort,Loc_enuCurrentPin,MDIO_enuPinCfgArray[itration]);
+	}
+	
+}
