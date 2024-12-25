@@ -6,7 +6,7 @@
  
 #define F_CPU 8000000 
 #include <util/delay.h>
-#include "../MDIO/Inc/MDIO.h"
+#include "MDIO.h"
 
 
 int main(void)
