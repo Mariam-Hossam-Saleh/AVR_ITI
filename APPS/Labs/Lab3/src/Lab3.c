@@ -7,7 +7,7 @@
 
 #define F_CPU 8000000
 #include <util/delay.h>
-#include "../MCAL/MDIO/inc/MDIO.h"
+#include "MDIO.h"
 
 int main(void)
 {
@@ -22,8 +22,13 @@ int main(void)
 		 MDIO_enuGetPinValue(MDIO_PORTD,MDIO_PIN5,&Loc_enuSwitchState3);
 		if(Loc_enuSwitchState1 == MDIO_PIN_LOW)                                                // check if switch is pressed
 		{
-			MDIO_enuSetPinValue(MDIO_PORTA,MDIO_PIN0,MDIO_PIN_HIGH);
 			_delay_ms(100);
+			MDIO_enuGetPinValue(MDIO_PORTD,MDIO_PIN3,&Loc_enuSwitchState1); 
+			if(Loc_enuSwitchState1 == MDIO_PIN_LOW)
+			{
+				MDIO_enuSetPinValue(MDIO_PORTA,MDIO_PIN0,MDIO_PIN_HIGH);
+				_delay_ms(100);
+			}
 		}
 		else if(Loc_enuSwitchState2 == MDIO_PIN_LOW)                                                // check if switch is pressed
 		{

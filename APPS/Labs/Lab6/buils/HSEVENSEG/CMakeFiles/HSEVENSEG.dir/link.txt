@@ -1,0 +1,2 @@
+/usr/bin/ar qc libHSEVENSEG.a CMakeFiles/HSEVENSEG.dir/src/HSEVENSEG.c.obj CMakeFiles/HSEVENSEG.dir/src/HSEVENSEG_Cfg.c.obj
+/usr/bin/ranlib libHSEVENSEG.a

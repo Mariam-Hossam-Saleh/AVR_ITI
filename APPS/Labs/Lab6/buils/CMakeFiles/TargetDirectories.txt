@@ -1,0 +1,17 @@
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/CMakeFiles/Lab6.elf.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/CMakeFiles/flash.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/CMakeFiles/burn.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/CMakeFiles/edit_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/CMakeFiles/rebuild_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HLED/CMakeFiles/HLED.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HLED/CMakeFiles/edit_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HLED/CMakeFiles/rebuild_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HSEVENSEG/CMakeFiles/HSEVENSEG.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HSEVENSEG/CMakeFiles/edit_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/HSEVENSEG/CMakeFiles/rebuild_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MDIO/CMakeFiles/MDIO.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MDIO/CMakeFiles/edit_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MDIO/CMakeFiles/rebuild_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MPORT/CMakeFiles/MPORT.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MPORT/CMakeFiles/edit_cache.dir
+/home/mariam/ITI_ES_INTAKE45/APPS/Labs/Lab6/buils/MPORT/CMakeFiles/rebuild_cache.dir
